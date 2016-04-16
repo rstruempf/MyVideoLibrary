@@ -31,5 +31,5 @@ public interface ILocationDAL {
      *
      * @param id Location id
      */
-    void removeLocation(int id);
+    boolean removeLocation(int id);
 }

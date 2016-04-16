@@ -62,8 +62,22 @@ public class DBHandler extends SQLiteOpenHelper implements ILocationDAL {
 
     @Override
     public ArrayList<Location> getLocations() {
-        // TODO: Load all locations from database
-        return null;
+        ArrayList<Location> results = new ArrayList<>();
+        String query = "SELECT * FROM " + TABLE_LOCATION;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (!cursor.moveToFirst()) {
+            db.close();
+            return results;
+        }
+        do {
+            Location location = new Location(Integer.parseInt(cursor.getString(0)), cursor.getString(1));
+            results.add(location);
+        } while(cursor.moveToNext());
+        db.close();
+        return results;
     }
 
     @Override
@@ -85,8 +99,11 @@ public class DBHandler extends SQLiteOpenHelper implements ILocationDAL {
     }
 
     @Override
-    public void removeLocation(int id) {
-        // TODO: Delete location from database
+    public boolean removeLocation(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int count = db.delete(TABLE_LOCATION, COLUMN_LOCATION_ID + " = ?", new String[] { String.valueOf(id) });
+        db.close();
+        return count > 0;
     }
 
     /**

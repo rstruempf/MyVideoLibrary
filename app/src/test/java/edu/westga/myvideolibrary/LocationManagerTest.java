@@ -122,8 +122,8 @@ public class LocationManagerTest {
         }
 
         @Override
-        public void removeLocation(int id) {
-
+        public boolean removeLocation(int id) {
+            return true;
         }
 
         private int findLocation(String name) {
