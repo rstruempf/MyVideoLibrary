@@ -23,11 +23,18 @@ public final class Video {
         return _location;
     }
 
+    public boolean isInLibrary() {
+        return _location != Location.NOT_IN_LIBRARY;
+    }
+
     public int getRating() {
         return _rating;
     }
 
     public String getDescription() {
+        if (_desc == null) {
+            return "";
+        }
         return _desc;
     }
 
