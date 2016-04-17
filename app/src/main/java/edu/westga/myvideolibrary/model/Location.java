@@ -6,6 +6,9 @@ package edu.westga.myvideolibrary.model;
  * Created by Ron on 4/13/2016.
  */
 public class Location {
+
+    public static final int NOT_IN_LIBRARY = 0;
+
     public Location(int id, String location) {
         this._id = id;
         this._location = location;

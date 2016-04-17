@@ -1,6 +1,7 @@
 package edu.westga.myvideolibrary.controller;
 
 import edu.westga.myvideolibrary.dal.DBHandler;
+import edu.westga.myvideolibrary.dal.ILocationDAL;
 import edu.westga.myvideolibrary.model.VideoLocationManager;
 
 /**
@@ -9,12 +10,10 @@ import edu.westga.myvideolibrary.model.VideoLocationManager;
  * Created by Ron on 4/17/2016.
  */
 public class VideoLibraryController {
-    private DBHandler _dbmgr;
     private VideoLocationManager _locations;
 
-    public VideoLibraryController(DBHandler dbmgr) {
-        _dbmgr = dbmgr;
-        _locations = new VideoLocationManager(_dbmgr);
+    public VideoLibraryController(ILocationDAL locMgr) {
+        _locations = new VideoLocationManager(locMgr);
     }
 
     /**

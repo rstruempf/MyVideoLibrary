@@ -54,7 +54,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... params) {
             // Allow database initialization and other controller setup to occur on a background thread
-            _controller = new VideoLibraryController(new DBHandler(MainActivity.this));
+            DBHandler dbmgr = new DBHandler(MainActivity.this);
+            _controller = new VideoLibraryController(dbmgr);
             // TODO: Load initial video list for display
             return null;
         }
