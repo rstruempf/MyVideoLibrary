@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "edu.westga.myvideolibrary"
+        applicationId "com.ronstruempf.myvideolibrary"
         minSdkVersion 21
         targetSdkVersion 23
         versionCode 1

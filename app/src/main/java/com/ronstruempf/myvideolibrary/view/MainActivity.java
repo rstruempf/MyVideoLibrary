@@ -1,4 +1,4 @@
-package edu.westga.myvideolibrary.view;
+package com.ronstruempf.myvideolibrary.view;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -7,9 +7,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import edu.westga.myvideolibrary.R;
-import edu.westga.myvideolibrary.controller.VideoLibraryController;
-import edu.westga.myvideolibrary.dal.DBHandler;
+import com.ronstruempf.myvideolibrary.R;
+import com.ronstruempf.myvideolibrary.controller.VideoLibraryController;
+import com.ronstruempf.myvideolibrary.dal.DBHandler;
 
 public class MainActivity extends AppCompatActivity {
     private String LOG_TAG = MainActivity.class.getSimpleName() + "_LOGTAG";

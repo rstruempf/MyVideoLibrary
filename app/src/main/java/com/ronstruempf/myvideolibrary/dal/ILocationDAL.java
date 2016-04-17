@@ -1,8 +1,8 @@
-package edu.westga.myvideolibrary.dal;
+package com.ronstruempf.myvideolibrary.dal;
 
 import java.util.ArrayList;
 
-import edu.westga.myvideolibrary.model.Location;
+import com.ronstruempf.myvideolibrary.model.Location;
 
 /**
  * Interface for location DB layer

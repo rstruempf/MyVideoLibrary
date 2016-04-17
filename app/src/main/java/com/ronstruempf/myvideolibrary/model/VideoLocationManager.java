@@ -1,8 +1,8 @@
-package edu.westga.myvideolibrary.model;
+package com.ronstruempf.myvideolibrary.model;
 
 import java.util.ArrayList;
 
-import edu.westga.myvideolibrary.dal.ILocationDAL;
+import com.ronstruempf.myvideolibrary.dal.ILocationDAL;
 
 /**
  * Manager for a list of location records

@@ -1,4 +1,4 @@
-package edu.westga.myvideolibrary;
+package com.ronstruempf.myvideolibrary;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

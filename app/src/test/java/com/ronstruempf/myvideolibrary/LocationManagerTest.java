@@ -1,12 +1,12 @@
-package edu.westga.myvideolibrary;
+package com.ronstruempf.myvideolibrary;
 
 import org.junit.Test;
 
 import java.util.ArrayList;
 
-import edu.westga.myvideolibrary.dal.ILocationDAL;
-import edu.westga.myvideolibrary.model.Location;
-import edu.westga.myvideolibrary.model.VideoLocationManager;
+import com.ronstruempf.myvideolibrary.dal.ILocationDAL;
+import com.ronstruempf.myvideolibrary.model.Location;
+import com.ronstruempf.myvideolibrary.model.VideoLocationManager;
 
 import static org.junit.Assert.*;
 

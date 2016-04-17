@@ -1,8 +1,8 @@
-package edu.westga.myvideolibrary.controller;
+package com.ronstruempf.myvideolibrary.controller;
 
-import edu.westga.myvideolibrary.dal.DBHandler;
-import edu.westga.myvideolibrary.dal.ILocationDAL;
-import edu.westga.myvideolibrary.model.VideoLocationManager;
+import com.ronstruempf.myvideolibrary.dal.DBHandler;
+import com.ronstruempf.myvideolibrary.dal.ILocationDAL;
+import com.ronstruempf.myvideolibrary.model.VideoLocationManager;
 
 /**
  * Controller for video library app

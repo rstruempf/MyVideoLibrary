@@ -1,4 +1,4 @@
-package edu.westga.myvideolibrary.model;
+package com.ronstruempf.myvideolibrary.model;
 
 /**
  * Video location records
