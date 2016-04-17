@@ -1,17 +1,19 @@
 package edu.westga.myvideolibrary.view;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import edu.westga.myvideolibrary.R;
+import edu.westga.myvideolibrary.controller.VideoLibraryController;
+import edu.westga.myvideolibrary.dal.DBHandler;
 
 public class MainActivity extends AppCompatActivity {
+    private String LOG_TAG = MainActivity.class.getSimpleName() + "_LOGTAG";
+    private VideoLibraryController _controller;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,4 +44,29 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    /**
+     * Startup Task - initialize DB and load data on background thread
+     */
+    private class InitializationTask extends AsyncTask<Void, Void, Void> {
+        /** The system calls this to perform work in a worker thread and
+         * delivers it the parameters given to AsyncTask.execute() */
+        @Override
+        protected Void doInBackground(Void... params) {
+            // Allow database initialization and other controller setup to occur on a background thread
+            _controller = new VideoLibraryController(new DBHandler(MainActivity.this));
+            // TODO: Load initial video list for display
+            return null;
+        }
+
+        /** The system calls this to perform work in the UI thread and delivers
+         * the result from doInBackground() */
+        @Override
+        protected void onPostExecute(Void result) {
+            // TODO: Display list
+        }
+
+    }
+
+
 }

@@ -9,8 +9,8 @@ import edu.westga.myvideolibrary.dal.ILocationDAL;
  *
  * Created by Ron on 4/14/2016.
  */
-public class LocationManager {
-    public LocationManager(ILocationDAL dal) {
+public class VideoLocationManager {
+    public VideoLocationManager(ILocationDAL dal) {
         _dal = dal;
         _list = _dal.getLocations();
     }

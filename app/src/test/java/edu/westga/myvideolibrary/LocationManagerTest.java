@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 import edu.westga.myvideolibrary.dal.ILocationDAL;
 import edu.westga.myvideolibrary.model.Location;
-import edu.westga.myvideolibrary.model.LocationManager;
+import edu.westga.myvideolibrary.model.VideoLocationManager;
 
 import static org.junit.Assert.*;
 
@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
  */
 public class LocationManagerTest {
 
-    private LocationManager _mgr = new LocationManager(new TestLocationDAL());
+    private VideoLocationManager _mgr = new VideoLocationManager(new TestLocationDAL());
 
     @Test
     public void whenCreatedCountShouldBe4() {

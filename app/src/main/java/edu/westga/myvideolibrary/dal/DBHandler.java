@@ -21,19 +21,16 @@ public class DBHandler extends SQLiteOpenHelper implements ILocationDAL {
     private static final String DATABASE_NAME = "myvideolibrary.db";
 
     public static final String TABLE_LOCATION = "location";
-    public static final String COLUMN_LOCATION_ID = "id";
+    public static final String COLUMN_LOCATION_ID = "_id";  // apparently SQLite expects pk column to be called _id
     public static final String COLUMN_LOCATION_LOCATION = "location";
 
     /**
      * Class constructor
      *
-     * @param context Application context
-     * @param name Unused
-     * @param factory Cursor factory
-     * @param version Unused
+     * @param context Context to operate under
      */
-    public DBHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, DATABASE_NAME, factory, DATABASE_VERSION);
+    public DBHandler(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
@@ -100,6 +97,7 @@ public class DBHandler extends SQLiteOpenHelper implements ILocationDAL {
                     COLUMN_LOCATION_LOCATION + " TEXT UNIQUE" +
                     ")";
             db.execSQL(createLocationTable);
+            add("Not In Library", db, "0");
             add("DVD", db);
             add("Digital", db);
             add("Amazon", db);
@@ -114,10 +112,18 @@ public class DBHandler extends SQLiteOpenHelper implements ILocationDAL {
          * @return Location id, or -1 if not found
          */
         public static int getId(String location, SQLiteDatabase db) {
-            String query = "SELECT " + COLUMN_LOCATION_ID + " FROM " + TABLE_LOCATION + " WHERE " + COLUMN_LOCATION_LOCATION + " =  \"" + location + "\"";
             int result = -1;
 
-            Cursor cursor = db.rawQuery(query, null);
+            // Doc: It appears that query() and rawQuery() are approximately equal and a matter of
+            //  preference.
+            Cursor cursor = db.query(
+                                TABLE_LOCATION,
+                                new String[] {COLUMN_LOCATION_ID},
+                                COLUMN_LOCATION_LOCATION + " = ?",
+                                new String[] {location},
+                                null,   // group by
+                                null,   // having
+                                null ); // order by
             if (cursor.moveToFirst()) {
                 result = Integer.parseInt(cursor.getString(0));
             }
@@ -129,9 +135,10 @@ public class DBHandler extends SQLiteOpenHelper implements ILocationDAL {
          *
          * @param location Location to add
          * @param db Database to add to
+         * @param id Row id if set directly
          * @return Identity column of item added, or existing item if applicable
          */
-        public static int add(String location, SQLiteDatabase db) {
+        private static int add(String location, SQLiteDatabase db, String id) {
             int result;
 
             // if location already exists, look up id
@@ -140,9 +147,23 @@ public class DBHandler extends SQLiteOpenHelper implements ILocationDAL {
             }
             // otherwise insert new row
             ContentValues values = new ContentValues();
+            if (id != null && id.length() > 0) {
+                values.put(COLUMN_LOCATION_ID, id);
+            }
             values.put(COLUMN_LOCATION_LOCATION, location);
             result=(int)db.insert(TABLE_LOCATION, null, values);
             return result;
+        }
+
+        /**
+         * Utility function to add a location to an open database
+         *
+         * @param location Location to add
+         * @param db Database to add to
+         * @return Identity column of item added, or existing item if applicable
+         */
+        private static int add(String location, SQLiteDatabase db) {
+            return add(location, db, null);
         }
 
 
@@ -170,7 +191,11 @@ public class DBHandler extends SQLiteOpenHelper implements ILocationDAL {
          */
         public static boolean remove(int id, DBHandler mgr) {
             SQLiteDatabase db = mgr.getWritableDatabase();
-            int count = db.delete(TABLE_LOCATION, COLUMN_LOCATION_ID + " = ?", new String[] { String.valueOf(id) });
+            int count = db.delete(
+                                TABLE_LOCATION,
+                                COLUMN_LOCATION_ID + " = ?",
+                                new String[] { String.valueOf(id) }
+                            );
             db.close();
             return count > 0;
         }
@@ -183,10 +208,17 @@ public class DBHandler extends SQLiteOpenHelper implements ILocationDAL {
          */
         public static ArrayList<Location> getAll(DBHandler mgr) {
             ArrayList<Location> results = new ArrayList<>();
-            String query = "SELECT * FROM " + TABLE_LOCATION;
 
-            SQLiteDatabase db = mgr.getWritableDatabase();
-            Cursor cursor = db.rawQuery(query, null);
+            SQLiteDatabase db = mgr.getReadableDatabase();
+
+            Cursor cursor = db.query(
+                    TABLE_LOCATION,
+                    new String[] {COLUMN_LOCATION_ID, COLUMN_LOCATION_LOCATION},
+                    null,   // where statement
+                    null,   // where parameters
+                    null,   // group by
+                    null,   // having
+                    null ); // order by
 
             if (!cursor.moveToFirst()) {
                 db.close();
