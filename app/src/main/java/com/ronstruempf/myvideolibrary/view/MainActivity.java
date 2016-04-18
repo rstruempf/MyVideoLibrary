@@ -2,6 +2,7 @@ package com.ronstruempf.myvideolibrary.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import com.ronstruempf.myvideolibrary.R;
 import com.ronstruempf.myvideolibrary.controller.VideoLibraryController;
+import com.ronstruempf.myvideolibrary.dal.DBHandler;
 import com.ronstruempf.myvideolibrary.dummy.DummyContent;
 
 import java.util.List;
