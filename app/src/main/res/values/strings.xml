@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">My Video Library</string>
-    <string name="action_settings">Settings</string>
+    <string name="title_video_detail">Video Detail</string>
 </resources>

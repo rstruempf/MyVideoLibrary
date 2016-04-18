@@ -117,13 +117,13 @@ public class DBHandler extends SQLiteOpenHelper implements ILocationDAL {
             // Doc: It appears that query() and rawQuery() are approximately equal and a matter of
             //  preference.
             Cursor cursor = db.query(
-                                TABLE_LOCATION,
-                                new String[] {COLUMN_LOCATION_ID},
-                                COLUMN_LOCATION_LOCATION + " = ?",
-                                new String[] {location},
-                                null,   // group by
-                                null,   // having
-                                null ); // order by
+                    TABLE_LOCATION,
+                    new String[] {COLUMN_LOCATION_ID},
+                    COLUMN_LOCATION_LOCATION + " = ?",
+                    new String[] {location},
+                    null,   // group by
+                    null,   // having
+                    null ); // order by
             if (cursor.moveToFirst()) {
                 result = Integer.parseInt(cursor.getString(0));
             }
@@ -192,10 +192,10 @@ public class DBHandler extends SQLiteOpenHelper implements ILocationDAL {
         public static boolean remove(int id, DBHandler mgr) {
             SQLiteDatabase db = mgr.getWritableDatabase();
             int count = db.delete(
-                                TABLE_LOCATION,
-                                COLUMN_LOCATION_ID + " = ?",
-                                new String[] { String.valueOf(id) }
-                            );
+                    TABLE_LOCATION,
+                    COLUMN_LOCATION_ID + " = ?",
+                    new String[] { String.valueOf(id) }
+            );
             db.close();
             return count > 0;
         }
