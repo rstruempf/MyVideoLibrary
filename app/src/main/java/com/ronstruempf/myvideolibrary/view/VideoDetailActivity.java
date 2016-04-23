@@ -55,8 +55,8 @@ public class VideoDetailActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putString(VideoDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(VideoDetailFragment.ARG_ITEM_ID));
+            arguments.putString(VideoDetailFragment.ARG_VIDEO_ID,
+                    getIntent().getStringExtra(VideoDetailFragment.ARG_VIDEO_ID));
             VideoDetailFragment fragment = new VideoDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()

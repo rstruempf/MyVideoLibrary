@@ -7,6 +7,13 @@ package com.ronstruempf.myvideolibrary.model;
  */
 public final class Video {
 
+    // TODO: Test
+    public Video(int id, String name, int year) {
+        _id = id;
+        _name = name;
+        _year = year;
+    }
+
     public int getId() {
         return _id;
     }
@@ -50,6 +57,10 @@ public final class Video {
      */
     public Video updateId(int id) {
         return new Builder(this).id(id).build();
+    }
+
+    public String getNameWithYear() {
+        return getName() + " (" + getYear() + ")";
     }
 
     /*

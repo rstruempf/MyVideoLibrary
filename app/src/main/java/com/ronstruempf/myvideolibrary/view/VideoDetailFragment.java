@@ -10,9 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ronstruempf.myvideolibrary.R;
-import com.ronstruempf.myvideolibrary.dummy.DummyContent;
-import com.ronstruempf.myvideolibrary.view.MainActivity;
-import com.ronstruempf.myvideolibrary.view.VideoDetailActivity;
+import com.ronstruempf.myvideolibrary.model.Video;
 
 /**
  * A fragment representing a single Video detail screen.
@@ -22,15 +20,14 @@ import com.ronstruempf.myvideolibrary.view.VideoDetailActivity;
  */
 public class VideoDetailFragment extends Fragment {
     /**
-     * The fragment argument representing the item ID that this fragment
-     * represents.
+     * The argument is the video id of the video to show details for
      */
-    public static final String ARG_ITEM_ID = "item_id";
+    public static final String ARG_VIDEO_ID = "video_id";
 
     /**
-     * The dummy content this fragment is presenting.
+     * Video bound to this fragment
      */
-    private DummyContent.DummyItem mItem;
+    private Video video;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -43,16 +40,21 @@ public class VideoDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments().containsKey(ARG_ITEM_ID)) {
-            // Load the dummy content specified by the fragment
-            // arguments. In a real-world scenario, use a Loader
-            // to load content from a content provider.
-            mItem = DummyContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
+        // TODO: Pass in Video or id and provide content provider
+        if (getArguments().containsKey(ARG_VIDEO_ID)) {
+            // Load the details for the video specified by the fragment
+            // argument.
+            // TODO: get video
+            //video = some method such as controller or content provider - getArguments().getString(ARG_VIDEO_ID));
+            // TODO: Test
+            //video = new Video.Builder(1, "H.E.A.T.", 1995).location(1).build();
 
             Activity activity = this.getActivity();
             CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
             if (appBarLayout != null) {
-                appBarLayout.setTitle(mItem.content);
+                // TODO: Test
+                //appBarLayout.setTitle(video.getNameWithYear());
+                appBarLayout.setTitle("H.E.A.T. (1995)");
             }
         }
     }
@@ -63,9 +65,11 @@ public class VideoDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.video_detail, container, false);
 
         // Show the dummy content as text in a TextView.
-        if (mItem != null) {
-            ((TextView) rootView.findViewById(R.id.video_detail)).setText(mItem.details);
-        }
+        // TODO: Test
+//        if (video != null) {
+//            // TODO: Create detail view with id?
+//            ((TextView) rootView.findViewById(R.id.video_detail)).setText(video.getNameWithYear());
+//        }
 
         return rootView;
     }

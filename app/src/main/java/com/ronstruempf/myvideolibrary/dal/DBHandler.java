@@ -37,7 +37,6 @@ public class DBHandler extends SQLiteOpenHelper implements ILocationDAL {
     public void onCreate(SQLiteDatabase db) {
         LocationDAL.initialize(db);
         initializeVideoLibrary(db);
-        initializeWishList(db);
     }
 
     /**
@@ -47,15 +46,6 @@ public class DBHandler extends SQLiteOpenHelper implements ILocationDAL {
      */
     private void initializeVideoLibrary(SQLiteDatabase db) {
         // TODO: Create video library table
-    }
-
-    /**
-     * Create wish list table
-     *
-     * @param db Database instance
-     */
-    private void initializeWishList(SQLiteDatabase db) {
-        // TODO: Create wishlist table
     }
 
     @Override

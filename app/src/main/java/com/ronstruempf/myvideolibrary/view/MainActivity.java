@@ -17,8 +17,9 @@ import android.widget.TextView;
 import com.ronstruempf.myvideolibrary.R;
 import com.ronstruempf.myvideolibrary.controller.VideoLibraryController;
 import com.ronstruempf.myvideolibrary.dal.DBHandler;
-import com.ronstruempf.myvideolibrary.dummy.DummyContent;
+import com.ronstruempf.myvideolibrary.model.Video;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -64,15 +65,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(DummyContent.ITEMS));
+        // TODO: Replace with 'get video list'
+        // TODO: Remove
+        ArrayList<Video> videos = new ArrayList<>();
+        videos.add(new Video.Builder(1, "H.E.A.T.", 1995).location(1).build());
+        videos.add(new Video.Builder(2, "18 Again!", 1988).location(1).build());
+        videos.add(new Video.Builder(3, "47 Ronin", 2013).location(2).build());
+        videos.add(new Video.Builder(4, "Divergent", 2014).location(3).build());
+        videos.add(new Video.Builder(5, "Fantastic Four", 2005).location(2).build());
+        // TODO: End Remove
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(videos));
     }
 
     public class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
-        private final List<DummyContent.DummyItem> mValues;
+        private final List<Video> mValues;
 
-        public SimpleItemRecyclerViewAdapter(List<DummyContent.DummyItem> items) {
+        public SimpleItemRecyclerViewAdapter(List<Video> items) {
             mValues = items;
         }
 
@@ -86,15 +96,17 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
             holder.mItem = mValues.get(position);
-            holder.mIdView.setText(mValues.get(position).id);
-            holder.mContentView.setText(mValues.get(position).content);
+            // TODO: create video fields and set their values
+            holder.mIdView.setText(String.valueOf(holder.mItem.getId()));
+            holder.mContentView.setText(holder.mItem.getNameWithYear());
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mTwoPane) {
                         Bundle arguments = new Bundle();
-                        arguments.putString(VideoDetailFragment.ARG_ITEM_ID, holder.mItem.id);
+                        // TODO: Try sending a whole video
+                        arguments.putString(VideoDetailFragment.ARG_VIDEO_ID, String.valueOf(holder.mItem.getId()));
                         VideoDetailFragment fragment = new VideoDetailFragment();
                         fragment.setArguments(arguments);
                         getSupportFragmentManager().beginTransaction()
@@ -103,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         Context context = v.getContext();
                         Intent intent = new Intent(context, VideoDetailActivity.class);
-                        intent.putExtra(VideoDetailFragment.ARG_ITEM_ID, holder.mItem.id);
+                        intent.putExtra(VideoDetailFragment.ARG_VIDEO_ID, String.valueOf(holder.mItem.getId()));
 
                         context.startActivity(intent);
                     }
@@ -120,11 +132,12 @@ public class MainActivity extends AppCompatActivity {
             public final View mView;
             public final TextView mIdView;
             public final TextView mContentView;
-            public DummyContent.DummyItem mItem;
+            public Video mItem;
 
             public ViewHolder(View view) {
                 super(view);
                 mView = view;
+                // TODO: Get actual video fields
                 mIdView = (TextView) view.findViewById(R.id.id);
                 mContentView = (TextView) view.findViewById(R.id.content);
             }
