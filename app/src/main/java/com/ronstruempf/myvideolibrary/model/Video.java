@@ -7,13 +7,6 @@ package com.ronstruempf.myvideolibrary.model;
  */
 public final class Video {
 
-    // TODO: Test
-    public Video(int id, String name, int year) {
-        _id = id;
-        _name = name;
-        _year = year;
-    }
-
     public int getId() {
         return _id;
     }

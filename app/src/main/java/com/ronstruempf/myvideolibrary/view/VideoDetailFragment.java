@@ -46,15 +46,12 @@ public class VideoDetailFragment extends Fragment {
             // argument.
             // TODO: get video
             //video = some method such as controller or content provider - getArguments().getString(ARG_VIDEO_ID));
-            // TODO: Test
-            //video = new Video.Builder(1, "H.E.A.T.", 1995).location(1).build();
+            video = new Video.Builder(1, "H.E.A.T.", 1995).location(1).build();
 
             Activity activity = this.getActivity();
             CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
             if (appBarLayout != null) {
-                // TODO: Test
-                //appBarLayout.setTitle(video.getNameWithYear());
-                appBarLayout.setTitle("H.E.A.T. (1995)");
+                appBarLayout.setTitle(video.getNameWithYear());
             }
         }
     }

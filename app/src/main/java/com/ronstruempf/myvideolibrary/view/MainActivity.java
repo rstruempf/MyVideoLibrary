@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.ronstruempf.myvideolibrary.R;
 import com.ronstruempf.myvideolibrary.controller.VideoLibraryController;
 import com.ronstruempf.myvideolibrary.dal.DBHandler;
 import com.ronstruempf.myvideolibrary.model.Video;
+import com.ronstruempf.myvideolibrary.model.VideoLocationManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,12 +35,12 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     private String LOG_TAG = MainActivity.class.getSimpleName() + "_LOGTAG";
     private VideoLibraryController _controller;
-
-    /**
-     * Whether or not the activity is in two-pane mode, i.e. running on a tablet
-     * device.
+    private RecyclerView _recyclerView;
+    private SimpleItemRecyclerViewAdapter _viewAdapter;
+    /*
+     * Whether or not the activity is in two-pane mode, i.e. running on a tablet device.
      */
-    private boolean mTwoPane;
+    private boolean singlePage = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,32 +51,26 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
-        View recyclerView = findViewById(R.id.video_list);
-        assert recyclerView != null;
-        setupRecyclerView((RecyclerView) recyclerView);
+        // The detail container view will be present only in the large-screen (single page) layouts
+        // If this view is present, then the activity should be in single page/two-pane mode
+        singlePage = (findViewById(R.id.video_detail_container) != null);
 
-        if (findViewById(R.id.video_detail_container) != null) {
-            // The detail container view will be present only in the
-            // large-screen layouts (res/values-w900dp).
-            // If this view is present, then the
-            // activity should be in two-pane mode.
-            mTwoPane = true;
-        }
-
-        // TODO: Execute background thread to load data
-    }
-
-    private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        // TODO: Replace with 'get video list'
         // TODO: Remove
         ArrayList<Video> videos = new ArrayList<>();
-        videos.add(new Video.Builder(1, "H.E.A.T.", 1995).location(1).build());
-        videos.add(new Video.Builder(2, "18 Again!", 1988).location(1).build());
-        videos.add(new Video.Builder(3, "47 Ronin", 2013).location(2).build());
-        videos.add(new Video.Builder(4, "Divergent", 2014).location(3).build());
-        videos.add(new Video.Builder(5, "Fantastic Four", 2005).location(2).build());
         // TODO: End Remove
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(videos));
+        // TODO: Execute background thread to load data
+        _recyclerView = (RecyclerView)findViewById(R.id.video_list);
+        assert _recyclerView != null;
+        _viewAdapter = new SimpleItemRecyclerViewAdapter(videos);
+        _recyclerView.setAdapter(_viewAdapter);
+
+        //
+        // Launch background thread to query service for weather data
+        //
+        if (savedInstanceState == null) {
+            Log.d(LOG_TAG, "Launching background thread to query video list");
+            new InitializationTask().execute();
+        }
     }
 
     public class SimpleItemRecyclerViewAdapter
@@ -103,9 +99,9 @@ public class MainActivity extends AppCompatActivity {
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mTwoPane) {
+                    if (singlePage) {
                         Bundle arguments = new Bundle();
-                        // TODO: Try sending a whole video
+                        // TODO: Try sending a whole video - can't, so need way to look one up
                         arguments.putString(VideoDetailFragment.ARG_VIDEO_ID, String.valueOf(holder.mItem.getId()));
                         VideoDetailFragment fragment = new VideoDetailFragment();
                         fragment.setArguments(arguments);
@@ -115,8 +111,8 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         Context context = v.getContext();
                         Intent intent = new Intent(context, VideoDetailActivity.class);
+                        // TODO: Need to pass a video here too
                         intent.putExtra(VideoDetailFragment.ARG_VIDEO_ID, String.valueOf(holder.mItem.getId()));
-
                         context.startActivity(intent);
                     }
                 }
@@ -126,6 +122,17 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public int getItemCount() {
             return mValues.size();
+        }
+
+        /**
+         * Set a new list of videos
+         *
+         * @param videos List of videos to set
+         */
+        public void setList(ArrayList<Video> videos) {
+            mValues.clear();
+            mValues.addAll(videos);
+            notifyDataSetChanged();
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
@@ -160,7 +167,6 @@ public class MainActivity extends AppCompatActivity {
             // Allow database initialization and other controller setup to occur on a background thread
             DBHandler dbmgr = new DBHandler(MainActivity.this);
             _controller = new VideoLibraryController(dbmgr);
-            // TODO: Load initial video list for display
             return null;
         }
 
@@ -168,7 +174,16 @@ public class MainActivity extends AppCompatActivity {
          * the result from doInBackground() */
         @Override
         protected void onPostExecute(Void result) {
-            // TODO: Display list
+            // TODO: Remove
+            ArrayList<Video> videos = new ArrayList<>();
+            videos.add(new Video.Builder(1, "H.E.A.T.", 1995).location(1).build());
+            videos.add(new Video.Builder(2, "18 Again!", 1988).location(1).build());
+            videos.add(new Video.Builder(3, "47 Ronin", 2013).location(2).build());
+            videos.add(new Video.Builder(4, "Divergent", 2014).location(3).build());
+            videos.add(new Video.Builder(5, "Fantastic Four", 2005).location(2).build());
+            // TODO: End Remove
+            // TODO: Query all videos in library from controller
+            _viewAdapter.setList(videos);
         }
 
     }
