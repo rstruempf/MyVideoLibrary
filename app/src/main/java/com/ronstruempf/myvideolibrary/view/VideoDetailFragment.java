@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,11 +43,9 @@ public class VideoDetailFragment extends Fragment {
 
         // TODO: Pass in Video or id and provide content provider
         if (getArguments().containsKey(ARG_VIDEO_ID)) {
-            // Load the details for the video specified by the fragment
-            // argument.
-            // TODO: get video
-            //video = some method such as controller or content provider - getArguments().getString(ARG_VIDEO_ID));
-            video = new Video.Builder(1, "H.E.A.T.", 1995).location(1).build();
+            // Load the details for the video specified by the fragment argument
+            int videoId = Integer.parseInt(getArguments().getString(ARG_VIDEO_ID));
+            video = MainActivity.getController().getVideo(videoId);
 
             Activity activity = this.getActivity();
             CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
@@ -61,13 +60,19 @@ public class VideoDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.video_detail, container, false);
 
-        // Show the dummy content as text in a TextView.
-        // TODO: Test
-//        if (video != null) {
-//            // TODO: Create detail view with id?
-//            ((TextView) rootView.findViewById(R.id.video_detail)).setText(video.getNameWithYear());
-//        }
-
+        if (video == null) {
+            return rootView;
+        }
+        // setup fields from video
+        String location = MainActivity.getController().getLocationManager().getName(video.getLocation());
+        ((TextView)rootView.findViewById(R.id.video_location)).setText(location);
+        ((TextView)rootView.findViewById(R.id.video_rating)).setText(String.valueOf(video.getRating()));
+        ((TextView)rootView.findViewById(R.id.video_description)).setText(video.getDescription());
+        ((TextView)rootView.findViewById(R.id.video_imdb_url)).setText(video.getIMDbUrl());
+//        TextView urlText = (TextView)rootView.findViewById(R.id.video_imdb_url);
+//        String url = video.getIMDbUrl();
+//        urlText.setText("<a href=\"" + url + "\">" + url + "</a>" );
+//        urlText.setMovementMethod(LinkMovementMethod.getInstance());
         return rootView;
     }
 }

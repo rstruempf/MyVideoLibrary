@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -19,7 +18,6 @@ import com.ronstruempf.myvideolibrary.R;
 import com.ronstruempf.myvideolibrary.controller.VideoLibraryController;
 import com.ronstruempf.myvideolibrary.dal.DBHandler;
 import com.ronstruempf.myvideolibrary.model.Video;
-import com.ronstruempf.myvideolibrary.model.VideoLocationManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +32,7 @@ import java.util.List;
  */
 public class MainActivity extends AppCompatActivity {
     private String LOG_TAG = MainActivity.class.getSimpleName() + "_LOGTAG";
-    private VideoLibraryController _controller;
-    private RecyclerView _recyclerView;
+    private static VideoLibraryController _controller;
     private SimpleItemRecyclerViewAdapter _viewAdapter;
     /*
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet device.
@@ -59,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<Video> videos = new ArrayList<>();
         // TODO: End Remove
         // TODO: Execute background thread to load data
-        _recyclerView = (RecyclerView)findViewById(R.id.video_list);
+        RecyclerView _recyclerView = (RecyclerView)findViewById(R.id.video_list);
         assert _recyclerView != null;
         _viewAdapter = new SimpleItemRecyclerViewAdapter(videos);
         _recyclerView.setAdapter(_viewAdapter);
@@ -71,6 +68,10 @@ public class MainActivity extends AppCompatActivity {
             Log.d(LOG_TAG, "Launching background thread to query video list");
             new InitializationTask().execute();
         }
+    }
+
+    public static VideoLibraryController getController() {
+        return _controller;
     }
 
     public class SimpleItemRecyclerViewAdapter
@@ -91,18 +92,14 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mItem = mValues.get(position);
-            // TODO: create video fields and set their values
-            holder.mIdView.setText(String.valueOf(holder.mItem.getId()));
-            holder.mContentView.setText(holder.mItem.getNameWithYear());
-
+            holder.setVideo(mValues.get(position));
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (singlePage) {
                         Bundle arguments = new Bundle();
                         // TODO: Try sending a whole video - can't, so need way to look one up
-                        arguments.putString(VideoDetailFragment.ARG_VIDEO_ID, String.valueOf(holder.mItem.getId()));
+                        arguments.putString(VideoDetailFragment.ARG_VIDEO_ID, String.valueOf(holder.getVideo().getId()));
                         VideoDetailFragment fragment = new VideoDetailFragment();
                         fragment.setArguments(arguments);
                         getSupportFragmentManager().beginTransaction()
@@ -112,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
                         Context context = v.getContext();
                         Intent intent = new Intent(context, VideoDetailActivity.class);
                         // TODO: Need to pass a video here too
-                        intent.putExtra(VideoDetailFragment.ARG_VIDEO_ID, String.valueOf(holder.mItem.getId()));
+                        intent.putExtra(VideoDetailFragment.ARG_VIDEO_ID, String.valueOf(holder.getVideo().getId()));
                         context.startActivity(intent);
                     }
                 }
@@ -136,22 +133,28 @@ public class MainActivity extends AppCompatActivity {
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            public final View mView;
-            public final TextView mIdView;
-            public final TextView mContentView;
-            public Video mItem;
+            private final View mView;
+            private final TextView mVideoName;
+            private Video mVideo;
 
             public ViewHolder(View view) {
                 super(view);
                 mView = view;
-                // TODO: Get actual video fields
-                mIdView = (TextView) view.findViewById(R.id.id);
-                mContentView = (TextView) view.findViewById(R.id.content);
+                mVideoName = (TextView) view.findViewById(R.id.list_content);
+            }
+
+            public void setVideo(Video video) {
+                mVideo = video;
+                mVideoName.setText(mVideo.getNameWithYear());
+            }
+
+            public Video getVideo() {
+                return mVideo;
             }
 
             @Override
             public String toString() {
-                return super.toString() + " '" + mContentView.getText() + "'";
+                return super.toString() + " '" + mVideoName.getText() + "'";
             }
         }
     }

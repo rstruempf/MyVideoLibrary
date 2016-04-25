@@ -2,6 +2,7 @@ package com.ronstruempf.myvideolibrary.controller;
 
 import com.ronstruempf.myvideolibrary.dal.DBHandler;
 import com.ronstruempf.myvideolibrary.dal.ILocationDAL;
+import com.ronstruempf.myvideolibrary.model.Video;
 import com.ronstruempf.myvideolibrary.model.VideoLocationManager;
 
 /**
@@ -23,5 +24,21 @@ public class VideoLibraryController {
      */
     public VideoLocationManager getLocationManager() {
         return _locations;
+    }
+
+    public Video getVideo(int videoId) {
+        // TODO: Look up video from database
+//        return new Video.Builder(videoId, "H.E.A.T.", 1995)
+//                                    .location(1)
+//                                    .rating(8)
+//                                    .description("Pacino & De Niro, super cop vs. super criminal")
+//                                    .imdbUrl("http://www.imdb.com/title/tt0113277/?ref_=nv_sr_3")
+//                                    .build();
+        return new Video.Builder(videoId, "Fantastic Four", 2005)
+                .location(2)
+                .rating(8)
+                .description("Jessica Alba plays Susan Storm in classic Fantastic Four movie that shows their origins")
+                .imdbUrl("http://www.imdb.com/title/tt0120667/?ref_=nv_sr_4")
+                .build();
     }
 }
