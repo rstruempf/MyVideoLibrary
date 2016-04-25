@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +40,6 @@ public class VideoDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // TODO: Pass in Video or id and provide content provider
         if (getArguments().containsKey(ARG_VIDEO_ID)) {
             // Load the details for the video specified by the fragment argument
             int videoId = Integer.parseInt(getArguments().getString(ARG_VIDEO_ID));
@@ -64,15 +62,13 @@ public class VideoDetailFragment extends Fragment {
             return rootView;
         }
         // setup fields from video
+        ((TextView)rootView.findViewById(R.id.video_title)).setText(video.getName());
+        ((TextView)rootView.findViewById(R.id.video_year)).setText(String.valueOf(video.getYear()));
         String location = MainActivity.getController().getLocationManager().getName(video.getLocation());
         ((TextView)rootView.findViewById(R.id.video_location)).setText(location);
         ((TextView)rootView.findViewById(R.id.video_rating)).setText(String.valueOf(video.getRating()));
         ((TextView)rootView.findViewById(R.id.video_description)).setText(video.getDescription());
         ((TextView)rootView.findViewById(R.id.video_imdb_url)).setText(video.getIMDbUrl());
-//        TextView urlText = (TextView)rootView.findViewById(R.id.video_imdb_url);
-//        String url = video.getIMDbUrl();
-//        urlText.setText("<a href=\"" + url + "\">" + url + "</a>" );
-//        urlText.setMovementMethod(LinkMovementMethod.getInstance());
         return rootView;
     }
 }

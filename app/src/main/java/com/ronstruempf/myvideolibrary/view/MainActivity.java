@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private String LOG_TAG = MainActivity.class.getSimpleName() + "_LOGTAG";
     private static VideoLibraryController _controller;
     private SimpleItemRecyclerViewAdapter _viewAdapter;
+
     /*
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet device.
      */
@@ -67,6 +68,9 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             Log.d(LOG_TAG, "Launching background thread to query video list");
             new InitializationTask().execute();
+        }
+        else {
+            // TODO: Reload current list
         }
     }
 
