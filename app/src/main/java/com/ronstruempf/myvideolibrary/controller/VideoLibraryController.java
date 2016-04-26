@@ -12,6 +12,8 @@ import com.ronstruempf.myvideolibrary.model.VideoLocationManager;
  */
 public class VideoLibraryController {
     private VideoLocationManager _locations;
+    // TODO: Add VideoManager here and provide access to that functionality
+    // TODO: Add IVideoDAL to constructor and use in allocating VideoManager
 
     public VideoLibraryController(ILocationDAL locMgr) {
         _locations = new VideoLocationManager(locMgr);

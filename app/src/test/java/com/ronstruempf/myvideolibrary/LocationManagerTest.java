@@ -93,7 +93,7 @@ public class LocationManagerTest {
     }
 
 
-    private class TestLocationDAL implements ILocationDAL {
+    public class TestLocationDAL implements ILocationDAL {
         private ArrayList<Location> _list = new ArrayList<>();
 
         public TestLocationDAL() {
