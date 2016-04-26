@@ -85,7 +85,7 @@ public class VideoManager {
      * @return Video list
      */
     public ArrayList<Video> getAll() {
-        ArrayList<Video> result = _dal.getAll();
+        ArrayList<Video> result = _dal.getAllVideos();
         return result;
     }
 

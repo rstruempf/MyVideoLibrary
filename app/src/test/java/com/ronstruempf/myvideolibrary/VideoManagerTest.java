@@ -33,7 +33,7 @@ public class VideoManagerTest {
         Video video = _mgr.getCached(0);
         assertNotNull("Video should not be null", video);
         assertEquals(1, video.getId());
-        assertEquals("H.E.A.T.", video.getName());
+        assertEquals("H.E.A.T.", video.getTitle());
     }
 
     @Test
@@ -68,7 +68,7 @@ public class VideoManagerTest {
         }
 
         @Override
-        public ArrayList<Video> getAll() {
+        public ArrayList<Video> getAllVideos() {
             return _list;
         }
 

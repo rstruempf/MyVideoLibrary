@@ -24,6 +24,6 @@ public interface IVideoDAL {
      *
      * @return List of videos
      */
-    ArrayList<Video> getAll();
+    ArrayList<Video> getAllVideos();
 
 }

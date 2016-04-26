@@ -62,7 +62,7 @@ public class VideoDetailFragment extends Fragment {
             return rootView;
         }
         // setup fields from video
-        ((TextView)rootView.findViewById(R.id.video_title)).setText(video.getName());
+        ((TextView)rootView.findViewById(R.id.video_title)).setText(video.getTitle());
         ((TextView)rootView.findViewById(R.id.video_year)).setText(String.valueOf(video.getYear()));
         String location = MainActivity.getController().getLocationManager().getName(video.getLocation());
         ((TextView)rootView.findViewById(R.id.video_location)).setText(location);

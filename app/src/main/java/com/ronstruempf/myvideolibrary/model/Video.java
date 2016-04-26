@@ -11,8 +11,8 @@ public final class Video {
         return _id;
     }
 
-    public String getName() {
-        return _name;
+    public String getTitle() {
+        return _title;
     }
 
     public int getYear() {
@@ -53,7 +53,7 @@ public final class Video {
     }
 
     public String getNameWithYear() {
-        return getName() + " (" + getYear() + ")";
+        return getTitle() + " (" + getYear() + ")";
     }
 
     /*
@@ -63,12 +63,12 @@ public final class Video {
 
         public Builder(int id, String name, int year) {
             _id = id;
-            _name = name;
+            _title = name;
             _year = year;
         }
 
         public Builder(Video video) {
-            this(video.getId(), video.getName(), video.getYear());
+            this(video.getId(), video.getTitle(), video.getYear());
             _location = video.getLocation();
             _rating = video.getRating();
             _desc = video.getDescription();
@@ -80,8 +80,8 @@ public final class Video {
             return this;
         }
 
-        public Builder name(String name) {
-            _name = name;
+        public Builder title(String title) {
+            _title = title;
             return this;
         }
 
@@ -115,7 +115,7 @@ public final class Video {
         }
 
         private int _id = 0;
-        private String _name;
+        private String _title;
         private int _year;
 
         private int _location = Location.NOT_IN_LIBRARY;
@@ -126,7 +126,7 @@ public final class Video {
 
     private Video(Builder builder) {
         _id = builder._id;
-        _name = builder._name;
+        _title = builder._title;
         _year = builder._year;
         _location = builder._location;
         _rating = builder._rating;
@@ -138,7 +138,7 @@ public final class Video {
      * Member variables
      */
     private int _id;
-    private String _name;   // No "The" at the beginning, always "..., The"
+    private String _title;   // No "The" at the beginning, always "..., The"
     private int _year;      // year movie was released
     private int _location;  // see source database, 0 = not in library
     private int _rating;    // 0-10, show as 0-5 stars with halves

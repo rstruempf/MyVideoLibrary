@@ -5,17 +5,19 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 
 import com.ronstruempf.myvideolibrary.model.Location;
+import com.ronstruempf.myvideolibrary.model.Video;
 
 /**
  * Database handler
  *
  * Created by Ron on 4/13/2016.
  */
-public class DBHandler extends SQLiteOpenHelper implements ILocationDAL {
+public class DBHandler extends SQLiteOpenHelper implements ILocationDAL, IVideoDAL {
 
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "myvideolibrary.db";
@@ -23,6 +25,15 @@ public class DBHandler extends SQLiteOpenHelper implements ILocationDAL {
     public static final String TABLE_LOCATION = "location";
     public static final String COLUMN_LOCATION_ID = "_id";  // apparently SQLite expects pk column to be called _id
     public static final String COLUMN_LOCATION_LOCATION = "location";
+
+    public static final String TABLE_VIDEO = "video";
+    public static final String COLUMN_VIDEO_ID = "_id";     // apparently SQLite expects pk column to be called _id
+    public static final String COLUMN_VIDEO_TITLE = "title";
+    public static final String COLUMN_VIDEO_YEAR = "year";
+    public static final String COLUMN_VIDEO_LOCATION = "location";
+    public static final String COLUMN_VIDEO_RATING = "rating";
+    public static final String COLUMN_VIDEO_DESCRIPTION = "description";
+    public static final String COLUMN_VIDEO_IMDB_URL = "imdb";
 
     /**
      * Class constructor
@@ -49,8 +60,7 @@ public class DBHandler extends SQLiteOpenHelper implements ILocationDAL {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion,
-                          int newVersion) {
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // update actions on new version install
     }
 
@@ -71,6 +81,14 @@ public class DBHandler extends SQLiteOpenHelper implements ILocationDAL {
     public boolean removeLocation(int id) {
         return LocationDAL.remove(id, this);
     }
+
+    /**
+     * IVideoDAL
+     */
+    public Video getVideo(int id) {return VideoDAL.get(id, this);}
+
+    public ArrayList<Video> getAllVideos() {return VideoDAL.getAll(this);}
+
 
     /**
      * Locations database access class
@@ -98,7 +116,7 @@ public class DBHandler extends SQLiteOpenHelper implements ILocationDAL {
          * Utility function to get a location id from an open database
          *
          * @param location Location to find
-         * @param db Database to look in
+         * @param db       Database to look in
          * @return Location id, or -1 if not found
          */
         public static int getId(String location, SQLiteDatabase db) {
@@ -108,12 +126,12 @@ public class DBHandler extends SQLiteOpenHelper implements ILocationDAL {
             //  preference.
             Cursor cursor = db.query(
                     TABLE_LOCATION,
-                    new String[] {COLUMN_LOCATION_ID},
+                    new String[]{COLUMN_LOCATION_ID},
                     COLUMN_LOCATION_LOCATION + " = ?",
-                    new String[] {location},
+                    new String[]{location},
                     null,   // group by
                     null,   // having
-                    null ); // order by
+                    null); // order by
             if (cursor.moveToFirst()) {
                 result = Integer.parseInt(cursor.getString(0));
             }
@@ -124,15 +142,15 @@ public class DBHandler extends SQLiteOpenHelper implements ILocationDAL {
          * Utility function to add a location to an open database
          *
          * @param location Location to add
-         * @param db Database to add to
-         * @param id Row id if set directly
+         * @param db       Database to add to
+         * @param id       Row id if set directly
          * @return Identity column of item added, or existing item if applicable
          */
         private static int add(String location, SQLiteDatabase db, String id) {
             int result;
 
             // if location already exists, look up id
-            if ((result=getId(location,db)) > 0) {
+            if ((result = getId(location, db)) > 0) {
                 return result;
             }
             // otherwise insert new row
@@ -141,7 +159,7 @@ public class DBHandler extends SQLiteOpenHelper implements ILocationDAL {
                 values.put(COLUMN_LOCATION_ID, id);
             }
             values.put(COLUMN_LOCATION_LOCATION, location);
-            result=(int)db.insert(TABLE_LOCATION, null, values);
+            result = (int) db.insert(TABLE_LOCATION, null, values);
             return result;
         }
 
@@ -149,7 +167,7 @@ public class DBHandler extends SQLiteOpenHelper implements ILocationDAL {
          * Utility function to add a location to an open database
          *
          * @param location Location to add
-         * @param db Database to add to
+         * @param db       Database to add to
          * @return Identity column of item added, or existing item if applicable
          */
         private static int add(String location, SQLiteDatabase db) {
@@ -161,12 +179,12 @@ public class DBHandler extends SQLiteOpenHelper implements ILocationDAL {
          * Add a location
          *
          * @param location Location to add
-         * @param mgr DB Manager to use
+         * @param mgr      DB Manager to use
          * @return Id of item added, or existing item if applicable
          */
         public static int add(String location, DBHandler mgr) {
             SQLiteDatabase db = mgr.getWritableDatabase();
-            int result=add(location, db);
+            int result = add(location, db);
 
             db.close();
             return result;
@@ -175,7 +193,7 @@ public class DBHandler extends SQLiteOpenHelper implements ILocationDAL {
         /**
          * Delete a location
          *
-         * @param id Id of location to delete
+         * @param id  Id of location to delete
          * @param mgr DB Manager to use
          * @return True if item was deleted
          */
@@ -184,7 +202,7 @@ public class DBHandler extends SQLiteOpenHelper implements ILocationDAL {
             int count = db.delete(
                     TABLE_LOCATION,
                     COLUMN_LOCATION_ID + " = ?",
-                    new String[] { String.valueOf(id) }
+                    new String[]{String.valueOf(id)}
             );
             db.close();
             return count > 0;
@@ -203,12 +221,12 @@ public class DBHandler extends SQLiteOpenHelper implements ILocationDAL {
 
             Cursor cursor = db.query(
                     TABLE_LOCATION,
-                    new String[] {COLUMN_LOCATION_ID, COLUMN_LOCATION_LOCATION},
+                    new String[]{COLUMN_LOCATION_ID, COLUMN_LOCATION_LOCATION},
                     null,   // where statement
                     null,   // where parameters
                     null,   // group by
                     null,   // having
-                    null ); // order by
+                    null); // order by
 
             if (!cursor.moveToFirst()) {
                 db.close();
@@ -217,8 +235,98 @@ public class DBHandler extends SQLiteOpenHelper implements ILocationDAL {
             do {
                 Location location = new Location(Integer.parseInt(cursor.getString(0)), cursor.getString(1));
                 results.add(location);
-            } while(cursor.moveToNext());
+            } while (cursor.moveToNext());
             db.close();
+            return results;
+        }
+    }
+
+    /**
+     * Video database access class
+     */
+    private static class VideoDAL {
+        /**
+         * Create videos table
+         *
+         * @param db Database instance
+         */
+        private static void initialize(SQLiteDatabase db) {
+            String createVideoTable = "CREATE TABLE " + TABLE_VIDEO +
+                    "(" + COLUMN_VIDEO_ID + " INTEGER PRIMARY KEY," +
+                          COLUMN_VIDEO_TITLE + " TEXT UNIQUE," +
+                          COLUMN_VIDEO_YEAR + " INTEGER," +
+                          COLUMN_VIDEO_LOCATION + " INTEGER," +
+                          COLUMN_VIDEO_RATING + " INTEGER," +
+                          COLUMN_VIDEO_DESCRIPTION + " TEXT," +
+                          COLUMN_VIDEO_IMDB_URL + " TEXT" +
+                    ")";
+            db.execSQL(createVideoTable);
+       }
+
+        /**
+         * Get a video by id
+         *
+         * @param mgr DB Manager to use
+         * @return Video (null if not found)
+         */
+        @Nullable
+        public static Video get(int id, DBHandler mgr) {
+            SQLiteDatabase db = mgr.getReadableDatabase();
+            ArrayList<Video> results = getter(db, COLUMN_VIDEO_ID + " = ?", new String[]{String.valueOf(id)});
+            db.close();
+            if (results.size() == 0) {
+                return null;
+            }
+            return results.get(0);
+        }
+
+        /**
+         * Get a list of all videos
+         *
+         * @param mgr DB Manager to use
+         * @return List of videos
+         */
+        public static ArrayList<Video> getAll(DBHandler mgr) {
+            SQLiteDatabase db = mgr.getReadableDatabase();
+            ArrayList<Video> results = getter(db, null, null);
+            db.close();
+            return results;
+        }
+
+        private static ArrayList<Video> getter(SQLiteDatabase db, String where, String[] params) {
+            ArrayList<Video> results = new ArrayList<>();
+
+            Cursor cursor = db.query(
+                    TABLE_VIDEO,
+                    new String[] {COLUMN_VIDEO_ID,
+                            COLUMN_VIDEO_TITLE,
+                            COLUMN_VIDEO_YEAR,
+                            COLUMN_VIDEO_LOCATION,
+                            COLUMN_VIDEO_RATING,
+                            COLUMN_VIDEO_DESCRIPTION,
+                            COLUMN_VIDEO_IMDB_URL
+                    },
+                    where,  // where statement
+                    params, // where parameters
+                    null,   // group by
+                    null,   // having
+                    null ); // order by
+
+            if (!cursor.moveToFirst()) {
+                return results;
+            }
+            do {
+                Video video = new Video.Builder(
+                        Integer.parseInt(cursor.getString(0)),
+                        cursor.getString(1),
+                        Integer.parseInt(cursor.getString(2)))
+                        .location(Integer.parseInt(cursor.getString(3)))
+                        .rating(Integer.parseInt(cursor.getString(4)))
+                        .description(cursor.getString(5))
+                        .imdbUrl(cursor.getString(6))
+                        .build();
+                results.add(video);
+            } while(cursor.moveToNext());
             return results;
         }
 
