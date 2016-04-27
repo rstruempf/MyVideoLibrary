@@ -214,6 +214,7 @@ public class MainActivity extends AppCompatActivity {
             // Allow database initialization and other controller setup to occur on a background thread
             DBHandler dbmgr = new DBHandler(MainActivity.this);
             _controller = new VideoLibraryController(dbmgr, dbmgr);
+            _controller.getVideoManager().cacheAll();
             return null;
         }
 
@@ -221,16 +222,7 @@ public class MainActivity extends AppCompatActivity {
          * the result from doInBackground() */
         @Override
         protected void onPostExecute(Void result) {
-            // TODO: Remove
-            ArrayList<Video> videos = new ArrayList<>();
-            videos.add(new Video.Builder(1, "H.E.A.T.", 1995).location(1).build());
-            videos.add(new Video.Builder(2, "18 Again!", 1988).location(1).build());
-            videos.add(new Video.Builder(3, "47 Ronin", 2013).location(2).build());
-            videos.add(new Video.Builder(4, "Divergent", 2014).location(3).build());
-            videos.add(new Video.Builder(5, "Fantastic Four", 2005).location(2).build());
-            // TODO: End Remove
-            // TODO: Query all videos in library from controller
-            _viewAdapter.setList(videos);
+            _viewAdapter.setList(_controller.getVideoManager().getCache());
         }
 
     }
