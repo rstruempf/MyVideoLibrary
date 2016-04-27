@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">My Video Library</string>
     <string name="title_video_detail">Video Detail</string>
+    <string name="add_new_movie">Add New Movie</string>
 </resources>
