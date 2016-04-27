@@ -155,22 +155,7 @@ public class MainActivity extends AppCompatActivity {
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (singlePage) {
-                        Bundle arguments = new Bundle();
-                        // TODO: Try sending a whole video - can't, so need way to look one up
-                        arguments.putString(VideoDetailFragment.ARG_VIDEO_ID, String.valueOf(holder.getVideo().getId()));
-                        VideoDetailFragment fragment = new VideoDetailFragment();
-                        fragment.setArguments(arguments);
-                        getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.video_detail_container, fragment)
-                                .commit();
-                    } else {
-                        Context context = v.getContext();
-                        Intent intent = new Intent(context, VideoDetailActivity.class);
-                        // TODO: Need to pass a video here too
-                        intent.putExtra(VideoDetailFragment.ARG_VIDEO_ID, String.valueOf(holder.getVideo().getId()));
-                        context.startActivity(intent);
-                    }
+                    displayVideoDetails(holder.getVideo().getId());
                 }
             });
         }
