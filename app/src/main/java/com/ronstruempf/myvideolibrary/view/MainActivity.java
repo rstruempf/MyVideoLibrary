@@ -49,7 +49,9 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitle(getTitle());
+        if (toolbar != null) {
+            toolbar.setTitle(getTitle());
+        }
 
         // The detail container view will be present only in the large-screen (single page) layouts
         // If this view is present, then the activity should be in single page/two-pane mode
@@ -226,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
         protected Void doInBackground(Void... params) {
             // Allow database initialization and other controller setup to occur on a background thread
             DBHandler dbmgr = new DBHandler(MainActivity.this);
-            _controller = new VideoLibraryController(dbmgr);
+            _controller = new VideoLibraryController(dbmgr, dbmgr);
             return null;
         }
 

@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -18,6 +19,7 @@ import com.ronstruempf.myvideolibrary.model.Video;
  * Created by Ron on 4/13/2016.
  */
 public class DBHandler extends SQLiteOpenHelper implements ILocationDAL, IVideoDAL {
+    private static String LOG_TAG = DBHandler.class.getSimpleName() + "_LOGTAG";
 
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "myvideolibrary.db";
@@ -47,16 +49,7 @@ public class DBHandler extends SQLiteOpenHelper implements ILocationDAL, IVideoD
     @Override
     public void onCreate(SQLiteDatabase db) {
         LocationDAL.initialize(db);
-        initializeVideoLibrary(db);
-    }
-
-    /**
-     * Create video library table
-     *
-     * @param db Database instance
-     */
-    private void initializeVideoLibrary(SQLiteDatabase db) {
-        // TODO: Create video library table
+        VideoDAL.initialize(db);
     }
 
     @Override
@@ -124,14 +117,21 @@ public class DBHandler extends SQLiteOpenHelper implements ILocationDAL, IVideoD
 
             // Doc: It appears that query() and rawQuery() are approximately equal and a matter of
             //  preference.
-            Cursor cursor = db.query(
-                    TABLE_LOCATION,
-                    new String[]{COLUMN_LOCATION_ID},
-                    COLUMN_LOCATION_LOCATION + " = ?",
-                    new String[]{location},
-                    null,   // group by
-                    null,   // having
-                    null); // order by
+            Cursor cursor;
+            try {
+                cursor = db.query(
+                        TABLE_LOCATION,
+                        new String[]{COLUMN_LOCATION_ID},
+                        COLUMN_LOCATION_LOCATION + " = ?",
+                        new String[]{location},
+                        null,   // group by
+                        null,   // having
+                        null); // order by
+            }
+            catch (Exception ex) {
+                Log.e(DBHandler.LOG_TAG, "Query error: " + ex.getMessage());
+                return result;
+            }
             if (cursor.moveToFirst()) {
                 result = Integer.parseInt(cursor.getString(0));
             }
@@ -159,6 +159,7 @@ public class DBHandler extends SQLiteOpenHelper implements ILocationDAL, IVideoD
                 values.put(COLUMN_LOCATION_ID, id);
             }
             values.put(COLUMN_LOCATION_LOCATION, location);
+            // TODO: Trap exception
             result = (int) db.insert(TABLE_LOCATION, null, values);
             return result;
         }
@@ -199,6 +200,7 @@ public class DBHandler extends SQLiteOpenHelper implements ILocationDAL, IVideoD
          */
         public static boolean remove(int id, DBHandler mgr) {
             SQLiteDatabase db = mgr.getWritableDatabase();
+            // TODO: Trap exception
             int count = db.delete(
                     TABLE_LOCATION,
                     COLUMN_LOCATION_ID + " = ?",
@@ -218,15 +220,23 @@ public class DBHandler extends SQLiteOpenHelper implements ILocationDAL, IVideoD
             ArrayList<Location> results = new ArrayList<>();
 
             SQLiteDatabase db = mgr.getReadableDatabase();
+            Cursor cursor;
 
-            Cursor cursor = db.query(
-                    TABLE_LOCATION,
-                    new String[]{COLUMN_LOCATION_ID, COLUMN_LOCATION_LOCATION},
-                    null,   // where statement
-                    null,   // where parameters
-                    null,   // group by
-                    null,   // having
-                    null); // order by
+            try {
+                cursor = db.query(
+                        TABLE_LOCATION,
+                        new String[]{COLUMN_LOCATION_ID, COLUMN_LOCATION_LOCATION},
+                        null,   // where statement
+                        null,   // where parameters
+                        null,   // group by
+                        null,   // having
+                        null); // order by
+            }
+            catch (Exception ex) {
+                Log.e(DBHandler.LOG_TAG, "Query error: " + ex.getMessage());
+                db.close();
+                return results;
+            }
 
             if (!cursor.moveToFirst()) {
                 db.close();
@@ -295,22 +305,30 @@ public class DBHandler extends SQLiteOpenHelper implements ILocationDAL, IVideoD
 
         private static ArrayList<Video> getter(SQLiteDatabase db, String where, String[] params) {
             ArrayList<Video> results = new ArrayList<>();
+            Cursor cursor;
 
-            Cursor cursor = db.query(
-                    TABLE_VIDEO,
-                    new String[] {COLUMN_VIDEO_ID,
-                            COLUMN_VIDEO_TITLE,
-                            COLUMN_VIDEO_YEAR,
-                            COLUMN_VIDEO_LOCATION,
-                            COLUMN_VIDEO_RATING,
-                            COLUMN_VIDEO_DESCRIPTION,
-                            COLUMN_VIDEO_IMDB_URL
-                    },
-                    where,  // where statement
-                    params, // where parameters
-                    null,   // group by
-                    null,   // having
-                    null ); // order by
+            try {
+                cursor = db.query(
+                        TABLE_VIDEO,
+                        new String[]{COLUMN_VIDEO_ID,
+                                COLUMN_VIDEO_TITLE,
+                                COLUMN_VIDEO_YEAR,
+                                COLUMN_VIDEO_LOCATION,
+                                COLUMN_VIDEO_RATING,
+                                COLUMN_VIDEO_DESCRIPTION,
+                                COLUMN_VIDEO_IMDB_URL
+                        },
+                        where,  // where statement
+                        params, // where parameters
+                        null,   // group by
+                        null,   // having
+                        null); // order by
+            }
+            catch (Exception ex) {
+                db.close();
+                Log.e(DBHandler.LOG_TAG, "Query error on videos table: " + ex.getMessage());
+                return results;
+            }
 
             if (!cursor.moveToFirst()) {
                 return results;

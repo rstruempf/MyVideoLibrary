@@ -2,8 +2,10 @@ package com.ronstruempf.myvideolibrary.controller;
 
 import com.ronstruempf.myvideolibrary.dal.DBHandler;
 import com.ronstruempf.myvideolibrary.dal.ILocationDAL;
+import com.ronstruempf.myvideolibrary.dal.IVideoDAL;
 import com.ronstruempf.myvideolibrary.model.Video;
 import com.ronstruempf.myvideolibrary.model.VideoLocationManager;
+import com.ronstruempf.myvideolibrary.model.VideoManager;
 
 /**
  * Controller for video library app
@@ -12,11 +14,11 @@ import com.ronstruempf.myvideolibrary.model.VideoLocationManager;
  */
 public class VideoLibraryController {
     private VideoLocationManager _locations;
-    // TODO: Add VideoManager here and provide access to that functionality
-    // TODO: Add IVideoDAL to constructor and use in allocating VideoManager
+    private VideoManager _videos;
 
-    public VideoLibraryController(ILocationDAL locMgr) {
+    public VideoLibraryController(ILocationDAL locMgr, IVideoDAL videoMgr) {
         _locations = new VideoLocationManager(locMgr);
+        _videos = new VideoManager(videoMgr);
     }
 
     /**
@@ -28,19 +30,6 @@ public class VideoLibraryController {
         return _locations;
     }
 
-    public Video getVideo(int videoId) {
-        // TODO: Look up video from database
-//        return new Video.Builder(videoId, "H.E.A.T.", 1995)
-//                                    .location(1)
-//                                    .rating(8)
-//                                    .description("Pacino & De Niro, super cop vs. super criminal")
-//                                    .imdbUrl("http://www.imdb.com/title/tt0113277/?ref_=nv_sr_3")
-//                                    .build();
-        return new Video.Builder(videoId, "Fantastic Four", 2005)
-                .location(2)
-                .rating(8)
-                .description("Jessica Alba plays Susan Storm in classic Fantastic Four movie that shows their origins")
-                .imdbUrl("http://www.imdb.com/title/tt0120667/?ref_=nv_sr_4")
-                .build();
-    }
+    public VideoManager getVideoManager() { return _videos; }
+
 }

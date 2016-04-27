@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ronstruempf.myvideolibrary.R;
 import com.ronstruempf.myvideolibrary.model.Video;
@@ -40,16 +41,30 @@ public class VideoDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments().containsKey(ARG_VIDEO_ID)) {
-            // Load the details for the video specified by the fragment argument
-            int videoId = Integer.parseInt(getArguments().getString(ARG_VIDEO_ID));
-            video = MainActivity.getController().getVideo(videoId);
+        if (!getArguments().containsKey(ARG_VIDEO_ID)) {
+            return;
+        }
+        // Load the details for the video specified by the fragment argument
+        int videoId;
+        try {
+            videoId = Integer.parseInt(getArguments().getString(ARG_VIDEO_ID));
+        }
+        catch (Exception ex) {
+            Toast toast = Toast.makeText(this.getContext(), "Invalid video id given", Toast.LENGTH_LONG);
+            toast.show();
+            return;
+        }
+        video = MainActivity.getController().getVideoManager().getVideo(videoId);
+        if (video == null) {
+            Toast toast = Toast.makeText(this.getContext(), "Video not found (" + videoId + ")", Toast.LENGTH_LONG);
+            toast.show();
+            return;
+        }
 
-            Activity activity = this.getActivity();
-            CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
-            if (appBarLayout != null) {
-                appBarLayout.setTitle(video.getNameWithYear());
-            }
+        Activity activity = this.getActivity();
+        CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
+        if (appBarLayout != null) {
+            appBarLayout.setTitle(video.getNameWithYear());
         }
     }
 
