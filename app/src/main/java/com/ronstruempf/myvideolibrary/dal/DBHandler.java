@@ -21,7 +21,7 @@ import com.ronstruempf.myvideolibrary.model.Video;
 public class DBHandler extends SQLiteOpenHelper implements ILocationDAL, IVideoDAL {
     private static String LOG_TAG = DBHandler.class.getSimpleName() + "_LOGTAG";
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String DATABASE_NAME = "myvideolibrary.db";
 
     public static final String TABLE_LOCATION = "location";
@@ -55,6 +55,9 @@ public class DBHandler extends SQLiteOpenHelper implements ILocationDAL, IVideoD
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // update actions on new version install
+        // if a newer version is installed, delete the previous video table and recreate
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_VIDEO);
+        VideoDAL.initialize(db);
     }
 
     /**
@@ -159,8 +162,13 @@ public class DBHandler extends SQLiteOpenHelper implements ILocationDAL, IVideoD
                 values.put(COLUMN_LOCATION_ID, id);
             }
             values.put(COLUMN_LOCATION_LOCATION, location);
-            // TODO: Trap exception
-            result = (int) db.insert(TABLE_LOCATION, null, values);
+            try {
+                result = (int) db.insert(TABLE_LOCATION, null, values);
+            }
+            catch (Exception ex) {
+                Log.e(DBHandler.LOG_TAG, "LocationDAL.add() Query error: " + ex.getMessage());
+                return 0;
+            }
             return result;
         }
 
@@ -271,7 +279,64 @@ public class DBHandler extends SQLiteOpenHelper implements ILocationDAL, IVideoD
                           COLUMN_VIDEO_IMDB_URL + " TEXT" +
                     ")";
             db.execSQL(createVideoTable);
+            add(db, "8mm I",  1999, 1, "", 5, "");
+            add(db, "8mm II",  2005, 1, "", 5, "");
+            add(db, "9",  2009, 1, "", 5, "");
+            add(db, "12:01",  1993, 1, "World is in a one day time loop, and one guy knows that it is happening", 5, "");
+            add(db, "13th Warrior, The",  1999, 1, "Antonio Banderas is an Arabic man who joins a group of 12 Viking warriors to help fight a terrible enemy", 5, "");
+            add(db, "18 Again!",  1988, 1, "George Burns, 81, switches places with his 18 year old grandson after a car accident", 5, "");
+            add(db, "47 Ronin",  2013, 2, "Keanu Reeves is an outsider who becomes an outcast Samuri, a Ronin, along with others, to defend the name of their leader", 5, "");
+            add(db, "50 First Dates",  2004, 1, "Drew Barymore has a condition where she forgets everything every night.  Adam Sandler falls in love with her", 5, "");
+            add(db, "300",  2007, 2, "300 naked Spartans battle a huge army led by someone so powerful, his followers believe he is a god", 5, "");
+            add(db, "Abysss, The",  1989, 1, "A submersible oil rig habitat is used to look into a lost submarine and finds underwater aliens", 5, "");
+            add(db, "Addicted to Love",  1997, 1, "", 5, "");
+            add(db, "Air America",  1990, 1, "Mel Gibson is a member of a civilian air support team in Laos during the Vietnam war", 5, "");
+            add(db, "Air Force One",  1997, 1, "Harrison Ford is the U.S. President when Air Force One is taken over by terrorists", 5, "");
+            add(db, "Airplane!",  1980, 1, ":)", 5, "");
+            add(db, "Aladdin",  1992, 1, "Robin Williams is a genie", 5, "");
+            add(db, "After Earth",  2013, 2, "Will Smith's son, Jaden, crosses a hostile Earth to save his father", 5, "");
+            add(db, "Aliens in the Attic",  2009, 1, "", 5, "");
+            add(db, "All About Steve",  2009, 1, "", 5, "");
+            add(db, "All Dogs Go to Heaven",  1989, 1, "", 5, "");
+            add(db, "Almost an Angel",  1990, 1, "", 5, "");
+            add(db, "America's Sweethearts",  2001, 1, "", 5, "");
+            add(db, "American Beauty",  1999, 1, "", 5, "");
+            add(db, "American Pie",  1999, 1, "", 5, "");
+            add(db, "American Tail, An 1-3",  1986, 1, "", 5, "");
+            add(db, "American Wedding, An",  2003, 1, "", 5, "");
+            add(db, "Anger Management",  2003, 1, "", 5, "");
+            add(db, "Anne Frank",  2001, 1, "", 5, "");
+            add(db, "Apocalypse Now",  1979, 1, "", 5, "");
+            add(db, "Assault on Precinct 13",  2005, 1, "", 5, "");
+            add(db, "Austin Powers In Goldmember",  2002, 2, "", 5, "");
+            add(db, "Avatar",  2009, 2, "Blue People", 5, "");
        }
+
+        private static int add(SQLiteDatabase db, String title, int year, int location, String description, int rating, String imdb) {
+            int result;
+
+            // if location already exists, look up id
+            // TODO: See if title already exists
+//            if ((result = getId(title, db)) > 0) {
+//                return result;
+//            }
+            // otherwise insert new row
+            ContentValues values = new ContentValues();
+            values.put(COLUMN_VIDEO_TITLE, title );
+            values.put(COLUMN_VIDEO_YEAR, year );
+            values.put(COLUMN_VIDEO_LOCATION, location );
+            values.put(COLUMN_VIDEO_RATING, rating );
+            values.put(COLUMN_VIDEO_DESCRIPTION, description );
+            values.put(COLUMN_VIDEO_IMDB_URL, imdb );
+            try {
+                result = (int) db.insert(TABLE_VIDEO, null, values);
+            }
+            catch (Exception ex) {
+                Log.e(DBHandler.LOG_TAG, "VideoDAL.add() Query error: " + ex.getMessage());
+                return 0;
+            }
+            return result;
+        }
 
         /**
          * Get a video by id

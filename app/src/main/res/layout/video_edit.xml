@@ -17,7 +17,7 @@
         android:layout_alignParentStart="true"
         android:layout_marginStart="20dp"
         android:layout_marginTop="30dp"
-        android:labelFor="@id/video_title" />
+        android:labelFor="@+id/video_title" />
 
     <EditText
         android:id="@+id/video_title"
@@ -39,7 +39,7 @@
         android:layout_alignStart="@id/video_title_label"
         android:text="@string/video_year"
         android:layout_marginTop="20dp"
-        android:labelFor="@id/video_year"/>
+        android:labelFor="@+id/video_year"/>
 
     <EditText
         android:id="@+id/video_year"
@@ -63,7 +63,7 @@
         android:layout_alignStart="@id/video_year_label"
         android:text="@string/video_location"
         android:layout_marginTop="20dp"
-        android:labelFor="@id/video_location"/>
+        android:labelFor="@+id/video_location"/>
 
     <EditText
         android:id="@+id/video_location"
@@ -85,7 +85,7 @@
         android:layout_alignStart="@id/video_location_label"
         android:text="@string/video_rating"
         android:layout_marginTop="20dp"
-        android:labelFor="@id/video_rating"/>
+        android:labelFor="@+id/video_rating"/>
 
     <EditText
         android:id="@+id/video_rating"
@@ -109,7 +109,7 @@
         android:layout_below="@+id/video_rating_label"
         android:layout_alignStart="@+id/video_rating_label"
         android:layout_marginTop="20dp"
-        android:labelFor="@id/video_description"/>
+        android:labelFor="@+id/video_description"/>
 
     <EditText
         android:id="@+id/video_description"
@@ -132,7 +132,7 @@
         android:layout_alignStart="@id/video_description_label"
         android:text="@string/video_imdb_url"
         android:layout_marginTop="20dp"
-        android:labelFor="@id/video_imdb_url" />
+        android:labelFor="@+id/video_imdb_url" />
 
     <EditText
         android:id="@+id/video_imdb_url"
