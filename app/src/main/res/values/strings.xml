@@ -2,4 +2,10 @@
     <string name="app_name">My Video Library</string>
     <string name="title_video_detail">Video Detail</string>
     <string name="add_new_movie">Add New Movie</string>
+    <string name="video_year">Year:</string>
+    <string name="video_location">Location:</string>
+    <string name="video_rating">Rating:</string>
+    <string name="video_description">Description:</string>
+    <string name="video_imdb_url">IMDb URL:</string>
+    <string name="video_title">Title:</string>
 </resources>
