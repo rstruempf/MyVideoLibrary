@@ -65,13 +65,8 @@ public class MainActivity extends AppCompatActivity {
         //
         // Launch background thread to query service for weather data
         //
-        if (savedInstanceState == null) {
-            Log.d(LOG_TAG, "Launching background thread to query video list");
-            new InitializationTask().execute();
-        }
-        else {
-            // TODO: Reload current list
-        }
+        Log.d(LOG_TAG, "Launching background thread to query video list");
+        new InitializationTask().execute();
     }
 
     @Override
