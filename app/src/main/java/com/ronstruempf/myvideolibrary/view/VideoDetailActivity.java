@@ -48,6 +48,8 @@ public class VideoDetailActivity extends AppCompatActivity {
             Bundle arguments = new Bundle();
             arguments.putString(VideoDetailFragment.ARG_VIDEO_ID,
                     getIntent().getStringExtra(VideoDetailFragment.ARG_VIDEO_ID));
+            arguments.putString(VideoDetailFragment.ARG_VIDEO_EDIT,
+                    getIntent().getStringExtra(VideoDetailFragment.ARG_VIDEO_EDIT));
             VideoDetailFragment fragment = new VideoDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()

@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     /*
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet device.
      */
-    private boolean singlePage = false;
+    private boolean wideScreen = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
         // The detail container view will be present only in the large-screen (single page) layouts
         // If this view is present, then the activity should be in single page/two-pane mode
-        singlePage = (findViewById(R.id.video_detail_container) != null);
+        wideScreen = (findViewById(R.id.video_detail_container) != null);
 
         RecyclerView _recyclerView = (RecyclerView)findViewById(R.id.video_list);
         assert _recyclerView != null;
@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
      * Display an edit form for adding a new video
      */
     private void addNewMovie() {
-        // TODO: Run new movie activity
+        displayVideoDetails(0, true);
     }
 
     /**
@@ -102,10 +102,21 @@ public class MainActivity extends AppCompatActivity {
      *
      * @param id Video to display
      */
-    private void displayVideoDetails(int id) {
-        if (singlePage) {
+    private void displayVideoDetails(int id, boolean edit) {
+        /**
+         * Here's where pop-up vs. widescreen happens.
+         *  - If wide screen, video_list has a FrameLayout called video_detail_container that gets
+         *    replaced below with VideoDetailFragment, which inflates a video_detail as its root
+         *    view (RelativeLayout)
+         *  - For single pane with pop-up detail, a VideoDetailActivity object is started, which
+         *    loads an activity_video_detail layout, which is simply a scrollable view container
+         *    called video_detail_container, into which is loaded a VideoDetailFragment just like
+         *    occurs below for the wide screen mode
+         */
+        if (wideScreen) {
             Bundle arguments = new Bundle();
             arguments.putString(VideoDetailFragment.ARG_VIDEO_ID, String.valueOf(id));
+            arguments.putString(VideoDetailFragment.ARG_VIDEO_EDIT, String.valueOf(edit));
             VideoDetailFragment fragment = new VideoDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
@@ -115,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
             Context context = this; // this.getApplicationContext();
             Intent intent = new Intent(context, VideoDetailActivity.class);
             intent.putExtra(VideoDetailFragment.ARG_VIDEO_ID, String.valueOf(id));
+            intent.putExtra(VideoDetailFragment.ARG_VIDEO_EDIT, String.valueOf(edit));
             context.startActivity(intent);
         }
     }
@@ -146,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    displayVideoDetails(holder.getVideo().getId());
+                    displayVideoDetails(holder.getVideo().getId(), false);
                 }
             });
         }
