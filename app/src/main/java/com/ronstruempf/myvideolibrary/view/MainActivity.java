@@ -57,13 +57,9 @@ public class MainActivity extends AppCompatActivity {
         // If this view is present, then the activity should be in single page/two-pane mode
         singlePage = (findViewById(R.id.video_detail_container) != null);
 
-        // TODO: Remove
-        ArrayList<Video> videos = new ArrayList<>();
-        // TODO: End Remove
-        // TODO: Execute background thread to load data
         RecyclerView _recyclerView = (RecyclerView)findViewById(R.id.video_list);
         assert _recyclerView != null;
-        _viewAdapter = new SimpleItemRecyclerViewAdapter(videos);
+        _viewAdapter = new SimpleItemRecyclerViewAdapter(new ArrayList<Video>());
         _recyclerView.setAdapter(_viewAdapter);
 
         //
