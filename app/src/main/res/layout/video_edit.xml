@@ -21,10 +21,10 @@
 
     <EditText
         android:id="@+id/video_title"
-        android:layout_width="225dp"
+        android:layout_width="260dp"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_alignTop="@+id/video_title_label"
+        android:layout_alignBaseline="@+id/video_title_label"
         android:layout_toEndOf="@+id/video_title_label"
         android:layout_marginStart="50dp"
         android:inputType="textCapSentences" />
@@ -43,13 +43,11 @@
 
     <EditText
         android:id="@+id/video_year"
-        android:layout_width="225dp"
+        android:layout_width="260dp"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text=""
-        android:layout_below="@id/video_title"
+        android:layout_alignBaseline="@+id/video_year_label"
         android:layout_alignStart="@id/video_title"
-        android:layout_marginTop="20dp"
         android:maxLength="4"
         android:inputType="number"/>
 
@@ -67,12 +65,11 @@
 
     <EditText
         android:id="@+id/video_location"
-        android:layout_width="225dp"
+        android:layout_width="260dp"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_below="@id/video_year"
+        android:layout_alignBaseline="@+id/video_location_label"
         android:layout_alignStart="@id/video_year"
-        android:layout_marginTop="20dp"
         android:inputType="text"/>
 
     <TextView
@@ -89,13 +86,12 @@
 
     <EditText
         android:id="@+id/video_rating"
-        android:layout_width="225dp"
+        android:layout_width="260dp"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text=""
-        android:layout_below="@id/video_location"
+        android:layout_alignBaseline="@+id/video_rating_label"
         android:layout_alignStart="@id/video_location"
-        android:layout_marginTop="20dp"
         android:maxLength="2"
         android:inputType="number"/>
 
