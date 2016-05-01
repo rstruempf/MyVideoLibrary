@@ -7,7 +7,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -77,15 +79,33 @@ public class VideoDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(_edit?R.layout.video_edit:R.layout.video_detail, container, false);
+        Spinner location;
 
+        // setup spinner if edit mode
+        if (_edit) {
+            location = (Spinner)rootView.findViewById(R.id.video_location);
+            location.setAdapter(
+                    new ArrayAdapter<>(
+                            getActivity(),
+                            R.layout.list_item, // layout that defines individual list items
+                            R.id.list_item,     // TextView id within layout
+                            MainActivity.getController().getLocationManager().getAll()
+                    )
+            );
+            if (_video != null) {
+                location.setSelection(_video.getLocation());
+            }
+        }
         if (_video == null) {
             return rootView;
         }
         // setup fields from video
         setField(R.id.video_title, _video.getTitle(), rootView);
         setField(R.id.video_year, String.valueOf(_video.getYear()), rootView);
-        String location = MainActivity.getController().getLocationManager().getName(_video.getLocation());
-        setField(R.id.video_location, location, rootView);
+        if (!_edit) {
+            String loc = MainActivity.getController().getLocationManager().getName(_video.getLocation());
+            setField(R.id.video_location, loc, rootView);
+        }
         setField(R.id.video_rating, String.valueOf(_video.getRating()), rootView);
         setField(R.id.video_description, _video.getDescription(), rootView);
         setField(R.id.video_imdb_url, _video.getIMDbUrl(), rootView);

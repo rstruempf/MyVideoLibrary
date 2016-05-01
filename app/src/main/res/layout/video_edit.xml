@@ -63,14 +63,13 @@
         android:layout_marginTop="20dp"
         android:labelFor="@+id/video_location"/>
 
-    <EditText
+    <Spinner
         android:id="@+id/video_location"
         android:layout_width="260dp"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:layout_alignBaseline="@+id/video_location_label"
-        android:layout_alignStart="@id/video_year"
-        android:inputType="text"/>
+        android:layout_alignStart="@id/video_year" />
 
     <TextView
         android:id="@+id/video_rating_label"

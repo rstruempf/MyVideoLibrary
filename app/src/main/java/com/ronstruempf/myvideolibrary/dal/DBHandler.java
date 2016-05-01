@@ -21,7 +21,7 @@ import com.ronstruempf.myvideolibrary.model.Video;
 public class DBHandler extends SQLiteOpenHelper implements ILocationDAL, IVideoDAL {
     private static String LOG_TAG = DBHandler.class.getSimpleName() + "_LOGTAG";
 
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
     private static final String DATABASE_NAME = "myvideolibrary.db";
 
     public static final String TABLE_LOCATION = "location";
@@ -55,7 +55,9 @@ public class DBHandler extends SQLiteOpenHelper implements ILocationDAL, IVideoD
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // update actions on new version install
-        // if a newer version is installed, delete the previous video table and recreate
+        // if a newer version is installed, delete the previous tables and recreate
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_LOCATION);
+        LocationDAL.initialize(db);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_VIDEO);
         VideoDAL.initialize(db);
     }
@@ -106,6 +108,7 @@ public class DBHandler extends SQLiteOpenHelper implements ILocationDAL, IVideoD
             add("Digital", db);
             add("Amazon", db);
             add("Vudu", db);
+            add("Amazon (Jess)", db);
         }
 
         /**
@@ -279,41 +282,57 @@ public class DBHandler extends SQLiteOpenHelper implements ILocationDAL, IVideoD
                           COLUMN_VIDEO_IMDB_URL + " TEXT" +
                     ")";
             db.execSQL(createVideoTable);
-            add(db, "8mm I",  1999, 1, "", 5, "");
-            add(db, "8mm II",  2005, 1, "", 5, "");
-            add(db, "9",  2009, 1, "", 5, "");
-            add(db, "12:01",  1993, 1, "World is in a one day time loop, and one guy knows that it is happening", 5, "");
-            add(db, "13th Warrior, The",  1999, 1, "Antonio Banderas is an Arabic man who joins a group of 12 Viking warriors to help fight a terrible enemy", 5, "");
-            add(db, "18 Again!",  1988, 1, "George Burns, 81, switches places with his 18 year old grandson after a car accident", 5, "");
-            add(db, "47 Ronin",  2013, 2, "Keanu Reeves is an outsider who becomes an outcast Samuri, a Ronin, along with others, to defend the name of their leader", 5, "");
-            add(db, "50 First Dates",  2004, 1, "Drew Barymore has a condition where she forgets everything every night.  Adam Sandler falls in love with her", 5, "");
-            add(db, "300",  2007, 2, "300 naked Spartans battle a huge army led by someone so powerful, his followers believe he is a god", 5, "");
-            add(db, "Abysss, The",  1989, 1, "A submersible oil rig habitat is used to look into a lost submarine and finds underwater aliens", 5, "");
-            add(db, "Addicted to Love",  1997, 1, "", 5, "");
-            add(db, "Air America",  1990, 1, "Mel Gibson is a member of a civilian air support team in Laos during the Vietnam war", 5, "");
-            add(db, "Air Force One",  1997, 1, "Harrison Ford is the U.S. President when Air Force One is taken over by terrorists", 5, "");
-            add(db, "Airplane!",  1980, 1, ":)", 5, "");
-            add(db, "Aladdin",  1992, 1, "Robin Williams is a genie", 5, "");
-            add(db, "After Earth",  2013, 2, "Will Smith's son, Jaden, crosses a hostile Earth to save his father", 5, "");
-            add(db, "Aliens in the Attic",  2009, 1, "", 5, "");
-            add(db, "All About Steve",  2009, 1, "", 5, "");
-            add(db, "All Dogs Go to Heaven",  1989, 1, "", 5, "");
-            add(db, "Almost an Angel",  1990, 1, "", 5, "");
-            add(db, "America's Sweethearts",  2001, 1, "", 5, "");
-            add(db, "American Beauty",  1999, 1, "", 5, "");
-            add(db, "American Pie",  1999, 1, "", 5, "");
-            add(db, "American Tail, An 1-3",  1986, 1, "", 5, "");
-            add(db, "American Wedding, An",  2003, 1, "", 5, "");
-            add(db, "Anger Management",  2003, 1, "", 5, "");
-            add(db, "Anne Frank",  2001, 1, "", 5, "");
-            add(db, "Apocalypse Now",  1979, 1, "", 5, "");
-            add(db, "Assault on Precinct 13",  2005, 1, "", 5, "");
-            add(db, "Austin Powers In Goldmember",  2002, 2, "", 5, "");
-            add(db, "Avatar",  2009, 2, "Blue People", 5, "");
-       }
+            add(db, "8mm I",  1999, "DVD", 0, "", "");
+            add(db, "8mm II",  2005, "DVD", 0, "", "");
+            add(db, "9",  2009, "DVD", 0, "", "");
+            add(db, "12:01",  1993, "DVD", 0, "World is in a one day time loop, and one guy knows that it is happening", "");
+            add(db, "13th Warrior, The",  1999, "DVD", 0, "Antonio Banderas is an Arabic man who joins a group of 12 Viking warriors to help fight a terrible enemy", "");
+            add(db, "18 Again!",  1988, "DVD", 0, "George Burns, 81, switches places with his 18 year old grandson after a car accident", "");
+            add(db, "47 Ronin",  2013, "Digital", 0, "Keanu Reeves is an outsider who becomes an outcast Samuri, a Ronin, along with others, to defend the name of their leader", "");
+            add(db, "50 First Dates",  2004, "DVD", 0, "Drew Barymore has a condition where she forgets everything every night.  Adam Sandler falls in love with her", "");
+            add(db, "300",  2007, "Digital", 0, "300 naked Spartans battle a huge army led by someone so powerful, his followers believe he is a god", "");
+            add(db, "Abysss, The",  1989, "DVD", 0, "A submersible oil rig habitat is used to look into a lost submarine and finds underwater aliens", "");
+            add(db, "Addicted to Love",  1997, "DVD", 0, "", "");
+            add(db, "Air America",  1990, "DVD", 0, "Mel Gibson is a member of a civilian air support team in Laos during the Vietnam war", "");
+            add(db, "Air Force One",  1997, "DVD", 0, "Harrison Ford is the U.S. President when Air Force One is taken over by terrorists", "");
+            add(db, "Airplane!",  1980, "DVD", 0, ":)", "");
+            add(db, "Aladdin",  1992, "DVD", 0, "Robin Williams is a genie", "");
+            add(db, "After Earth",  2013, "Digital", 0, "Will Smith's son, Jaden, crosses a hostile Earth to save his father", "");
+            add(db, "Aliens in the Attic",  2009, "DVD", 0, "", "");
+            add(db, "All About Steve",  2009, "DVD", 0, "", "");
+            add(db, "All Dogs Go to Heaven",  1989, "DVD", 0, "", "");
+            add(db, "Almost an Angel",  1990, "DVD", 0, "", "");
+            add(db, "America's Sweethearts",  2001, "DVD", 0, "", "");
+            add(db, "American Beauty",  1999, "DVD", 0, "", "");
+            add(db, "American Pie",  1999, "DVD", 0, "", "");
+            add(db, "American Tail, An 1-3",  1986, "DVD", 0, "", "");
+            add(db, "American Wedding, An",  2003, "DVD", 0, "", "");
+            add(db, "Anger Management",  2003, "DVD", 0, "", "");
+            add(db, "Anne Frank",  2001, "DVD", 0, "", "");
+            add(db, "Apocalypse Now",  1979, "DVD", 0, "", "");
+            add(db, "Assault on Precinct 13",  2005, "DVD", 0, "", "");
+            add(db, "Austin Powers In Goldmember",  2002, "Digital", 0, "", "");
+            add(db, "Avatar",  2009, "Digital", 0, "Blue People", "");
+        }
 
-        private static int add(SQLiteDatabase db, String title, int year, int location, String description, int rating, String imdb) {
+        private static int locationId(String loc) {
+            switch (loc) {
+                case "DVD":
+                    return 1;
+                case "Digital":
+                    return 2;
+                case "Amazon":
+                    return 3;
+                case "Vudu":
+                    return 4;
+                default:
+                    return 0;
+            }
+        }
+
+        private static int add(SQLiteDatabase db, String title, int year, String loc, int rating, String description, String imdb) {
             int result;
+            int location = locationId(loc);
 
             // if location already exists, look up id
             // TODO: See if title already exists

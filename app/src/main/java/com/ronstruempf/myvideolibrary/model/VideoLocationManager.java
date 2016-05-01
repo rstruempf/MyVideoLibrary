@@ -26,6 +26,13 @@ public class VideoLocationManager {
         return _list.get(idx);
     }
 
+    public ArrayList<String> getAll() {
+        ArrayList<String> results = new ArrayList<>();
+        for (Location loc : _list) {
+            results.add(loc.getLocation());
+        }
+        return results;
+    }
     /**
      * Look up location id by name
      *
